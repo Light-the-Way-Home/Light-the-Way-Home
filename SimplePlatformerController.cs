@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SimplePlatformerController : MonoBehaviour {
+public class SimplePlatformerController : MonoBehaviour
+{
 
 	[HideInInspector] public bool facingRight = true;
 	[HideInInspector] public bool jump = false;
@@ -17,50 +18,49 @@ public class SimplePlatformerController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Awake () 
+	void Awake ()
 	{
-		anim = GetComponent<Animator>();
-		rb2d = GetComponent<Rigidbody2D>();
+		anim = GetComponent<Animator> ();
+		rb2d = GetComponent<Rigidbody2D> ();
+
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void Update ()
 	{
-		grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+		grounded = Physics2D.Linecast (transform.position, groundCheck.position, 1 << LayerMask.NameToLayer ("Ground"));
 
-		if (Input.GetButtonDown("Jump") && grounded)
-		{
+		if (Input.GetButtonDown ("Jump") && grounded) {
 			jump = true;
 		}
 	}
 
-	void FixedUpdate()
+	void FixedUpdate ()
 	{
-		float h = Input.GetAxis("Horizontal");
+		float h = Input.GetAxis ("Horizontal");
 
-		anim.SetFloat("Speed", Mathf.Abs(h));
+		anim.SetFloat ("Speed", Mathf.Abs (h));
 
 		if (h * rb2d.velocity.x < maxSpeed)
-			rb2d.AddForce(Vector2.right * h * moveForce);
+			rb2d.AddForce (Vector2.right * h * moveForce);
 
 		if (Mathf.Abs (rb2d.velocity.x) > maxSpeed)
-			rb2d.velocity = new Vector2(Mathf.Sign (rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+			rb2d.velocity = new Vector2 (Mathf.Sign (rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
 
 		if (h > 0 && !facingRight)
 			Flip ();
 		else if (h < 0 && facingRight)
 			Flip ();
 
-		if (jump)
-		{
-			anim.SetTrigger("Jump");
-			rb2d.AddForce(new Vector2(0f, jumpForce));
+		if (jump) {
+			anim.SetTrigger ("Jump");
+			rb2d.AddForce (new Vector2 (0f, jumpForce));
 			jump = false;
 		}
 	}
 
 
-	void Flip()
+	void Flip ()
 	{
 		facingRight = !facingRight;
 		Vector3 theScale = transform.localScale;
