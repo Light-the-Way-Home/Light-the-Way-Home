@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PickUpObject : MonoBehaviour
 {
-
+	Animator anim;
 	public Light PlayerLight;
 	public bool isDimming;
 	public float maxIntensity;
@@ -11,7 +11,7 @@ public class PickUpObject : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		
+		anim = GetComponent<Animator> ();
 	}
 
 	// Update is called once per frame
@@ -23,10 +23,16 @@ public class PickUpObject : MonoBehaviour
 	void OnTriggerEnter2D (Collider2D other)
 	{
 		if (other.gameObject.CompareTag ("Player")) {
-			Destroy (gameObject);
+			StartCoroutine ("wait");
 			if (isDimming) {
 				PlayerLight.intensity = maxIntensity;
 			}
 		}
+	}
+
+	IEnumerator wait(){
+		anim.SetBool ("Shatter", true);
+		yield return new WaitForSeconds (1f);
+		Destroy (gameObject);
 	}
 }
